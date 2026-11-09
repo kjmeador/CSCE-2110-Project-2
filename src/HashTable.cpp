@@ -1,52 +1,53 @@
+
 #include "../include/HashTable.h"
 #include <cctype>
 using namespace std;
 
 HashTable::HashTable() {
-    table.resize(INITIAL_CAPACITY); // Initialize the hashtable with the initial capacity
-    entries = 0; // Initialize the number of entries to 0
-    collisions = 0; // Initialize the number of collisions to 0
+    table.resize(INITIAL_CAPACITY);
+    entries = 0;
+    collisions = 0;
 }
 
 string HashTable::normalizeID(string id) const {
-    size_t start = id.find_first_not_of(" \t\n\r\f\v"); // Find the first non-whitespace character
+    size_t start = id.find_first_not_of(" \t\n\r\f\v");
 
     if (start == string::npos) {
-        return ""; // Return an empty string if the ID is all whitespace
+        return "";
     }
 
-    size_t end = id.find_last_not_of(" \t\n\r\f\v"); // Find the last non-whitespace character
-    id = id.substr(start, end - start + 1); // Extract the substring without leading/trailing whitespace
+    size_t end = id.find_last_not_of(" \t\n\r\f\v");
+    id = id.substr(start, end - start + 1);
 
     for (int i = 0; i < id.length(); i++) {
-        id[i] = toupper(static_cast<unsigned char>(id[i])); // Convert each character to uppercase
+        id[i] = toupper(static_cast<unsigned char>(id[i]));
     }
 
-    return id; // Return the normalized ID
+    return id;
 }
 
 int HashTable::hashFunction(string id) const {
     unsigned long long hash = 0;
 
     for (int i = 0; i < id.length(); i++) {
-        hash = hash * 31 + id[i] % table.size(); // Compute the hash value using a polynomial rolling hash function
+        hash = (hash * 31 + static_cast<unsigned char>(id[i])) % table.size();
     }
 
-    return hash;
+    return static_cast<int>(hash);
 }
 
 bool HashTable::insert(Facility facility) {
-    string id = normalizeID(facility.getId()); // Normalize the ID of the Facility object
-    int index = hashFunction(id); // Compute the index for the normalized ID
+    string id = normalizeID(facility.getId());
+    int index = hashFunction(id);
 
     for (int i = 0; i < table[index].size(); i++) {
         if (table[index][i].getId() == id) {
-            return false; // Return false if the ID already exists in the hashtable
+            return false;
         }
     }
 
     if (!table[index].empty()) {
-        collisions++; // Increment the collision count if there is already an entry at the computed index
+        collisions++;
     }
 
     Facility normalizedFacility(
@@ -56,33 +57,33 @@ bool HashTable::insert(Facility facility) {
         facility.getCategory()
     );
 
-    table[index].push_back(normalizedFacility); // Insert the normalized Facility object into the hashtable
-    entries++; // Increment the entry count
+    table[index].push_back(normalizedFacility);
+    entries++;
 
-    return true; // Return true to indicate successful insertion
-}  
+    return true;
+}
 
 const Facility* HashTable::search(string id) const {
-    id = normalizeID(id); // Normalize the ID to search for
-    int index = hashFunction(id); // Compute the index for the normalized ID
+    id = normalizeID(id);
+    int index = hashFunction(id);
 
     for (int i = 0; i < table[index].size(); i++) {
         if (table[index][i].getId() == id) {
-            return &table[index][i]; // Return a pointer to the Facility object if found
+            return &table[index][i];
         }
     }
 
-    return nullptr; // Return nullptr if the Facility object is not found
+    return nullptr;
 }
 
 int HashTable::getCapacity() const {
-    return table.size(); // Return the current capacity of the hashtable
+    return table.size();
 }
 
 int HashTable::getEntries() const {
-    return entries; // Return the number of entries in the hashtable
+    return entries;
 }
 
 int HashTable::getCollisions() const {
-    return collisions; // Return the number of collisions in the hashtable
+    return collisions;
 }
