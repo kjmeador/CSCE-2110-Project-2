@@ -23,6 +23,8 @@ public:
 
     void displayGraph() const; // Display the graph of buildings and their connections
     void displayStats() const; // Display statistics about the graph, such as the number of buildings and connections
+
+    void findReachable(string startName) const;  // Finds reachable buildings using BFS.
 };
 
 #endif
