@@ -1,4 +1,4 @@
-#include "Facility.h"
+#include "../include/Facility.h"
 
 // Initialize the constructor for the Facility class that takes in the id, name, building, and category as parameters
 Facility::Facility(string id, string name, string building, string category){
