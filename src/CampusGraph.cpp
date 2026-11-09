@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <cctype>
+#include <queue>
 using namespace std;
 
 string CampusGraph::normalizeName(string name) const {
@@ -238,4 +239,53 @@ void CampusGraph::displayStats() const {
         cout << buildings[i].name << " - Degree: "
              << buildings[i].neighbors.size() << endl;
     }
+}
+
+// Finds reachable buildings using Breadth-First Search.
+void CampusGraph::findReachable(string startName) const {
+    int startIndex = findBuilding(startName);
+
+    // Check whether the starting building exists.
+    if (startIndex == -1) {
+        cout << "Error: Building not found." << endl;
+        return;
+    }
+
+    vector<bool> visited(buildings.size(), false);
+    vector<int> distance(buildings.size(), -1);
+    queue<int> q;
+
+    // Start BFS at the selected building.
+    visited[startIndex] = true;
+    distance[startIndex] = 0;
+    q.push(startIndex);
+
+    cout << "\nReachable Buildings from "
+         << buildings[startIndex].name << ":\n";
+
+    int reachableCount = 0;
+
+    while (!q.empty()) {
+        int current = q.front();
+        q.pop();
+
+        cout << buildings[current].name
+             << " - Distance: " << distance[current] << endl;
+
+        reachableCount++;
+
+        // Visit each unvisited neighbor.
+        for (int i = 0; i < buildings[current].neighbors.size(); i++) {
+            int neighbor = buildings[current].neighbors[i];
+
+            if (!visited[neighbor]) {
+                visited[neighbor] = true;
+                distance[neighbor] = distance[current] + 1;
+                q.push(neighbor);
+            }
+        }
+    }
+
+    cout << "\nTotal reachable buildings: "
+         << reachableCount << " out of " << buildings.size() << endl;
 }
