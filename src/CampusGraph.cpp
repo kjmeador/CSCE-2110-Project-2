@@ -289,3 +289,17 @@ void CampusGraph::findReachable(string startName) const {
     cout << "\nTotal reachable buildings: "
          << reachableCount << " out of " << buildings.size() << endl;
 }
+
+// Checks whether a building exists and returns its original name.
+bool CampusGraph::getBuildingName(
+    string name, string& originalName) const {
+
+    int index = findBuilding(name);
+
+    if (index == -1) {
+        return false;
+    }
+
+    originalName = buildings[index].name;
+    return true;
+}
