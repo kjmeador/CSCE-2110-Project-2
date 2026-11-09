@@ -1,0 +1,79 @@
+CAMPUS RESOURCE EXPLORATION SYSTEM
+DESIGN DOCUMENT - MILESTONE 1
+
+1. HASH TABLE
+
+The facility database uses a custom hash table to store and retrieve
+facilities using their unique facility IDs.
+
+The hash function processes each character of the uppercase facility ID
+using the following formula:
+
+hash = (hash * 31 + character) % capacity
+
+The initial capacity is 11.
+
+Collision handling uses separate chaining. Each hash table index stores
+a vector of facilities. When multiple facility IDs produce the same
+index, they are stored in the same bucket.
+
+A collision is counted when a new facility is inserted into a bucket
+that already contains at least one facility. Duplicate IDs are rejected
+and are not inserted.
+
+Separate chaining allows the table to store multiple entries in the
+same bucket without imposing a fixed maximum number of entries.
+
+2. CAMPUS GRAPH
+
+The campus graph represents buildings as vertices and connections
+between buildings as undirected edges.
+
+The graph uses an adjacency list. Each building stores its name and a
+vector containing the indexes of its neighboring buildings.
+
+An adjacency list was selected because it efficiently stores the
+connections between buildings without requiring a full matrix.
+
+Breadth-First Search (BFS) uses a queue and a visited array to explore
+reachable buildings. Buildings are marked visited when they are added
+to the queue, preventing repeated visits.
+
+The program also displays graph statistics, including the number of
+buildings, total connections, and the degree of each building.
+
+3. DEPARTMENT TREE
+
+The department hierarchy uses a general tree structure.
+
+Each department stores its name, a pointer to its parent, and a vector
+of pointers to its children.
+
+The university is the root department. New departments must reference
+an existing parent department.
+
+The tree supports department insertion, searching, hierarchy display,
+and preorder traversal.
+
+4. PROGRAM ORGANIZATION
+
+Facility:
+Stores facility information and provides access through getter functions.
+
+HashTable:
+Implements the custom hash table, insertion, searching, and collision
+tracking.
+
+FacilityDatabase:
+Loads facility records, validates facility IDs, checks building names,
+and manages facility information.
+
+CampusGraph:
+Loads buildings and connections, displays graph information, and
+performs BFS.
+
+DepartmentTree:
+Loads and manages the department hierarchy and performs tree traversal.
+
+Main:
+Loads the input files, displays the menu, and handles user interaction.
